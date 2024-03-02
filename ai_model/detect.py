@@ -3,16 +3,9 @@ from facenet_pytorch import MTCNN
 import torch
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-# Adjust these parameters to fine-tune your face detection
-min_face_size = 40 # example value, adjust as needed
-thresholds = [0.8, 0.8, 0.8]  # example values, adjust as needed
-factor = 0.8  # example value, adjust as needed
-
-mtcnn = MTCNN(keep_all=True, device=device, min_face_size=min_face_size, thresholds=thresholds, factor=factor)
+mtcnn = MTCNN(keep_all=True, device=device)
 
 def detect_faces(frame):
-    mtcnn = MTCNN(keep_all=True, device=device, min_face_size=min_face_size, thresholds=thresholds, factor=factor)
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     faces, _ = mtcnn.detect(frame_rgb)
 
@@ -23,27 +16,43 @@ def detect_faces(frame):
                           (int(face[0]), int(face[1])),
                           (int(face[2]), int(face[3])),
                           (0, 0, 0), 2)
-        cv2.putText(frame, f"Number of faces detected: {count}", (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, f"Number of faces detected: {count}", (130, 130), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    (0, 255, 255), 1)
     else:
-        cv2.putText(frame, "No faces detected", (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "No faces detected", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
 
     return frame
 
-camera = cv2.VideoCapture(0) # Use 1 for external camera
+# Function to check for external cameras
+def find_external_camera():
+    for index in range(10):
+        camera = cv2.VideoCapture(index)
+        if camera.isOpened():
+            _, _ = camera.read()  # Grab a frame to check if camera is working
+            if _ is not None:
+                return index
+            camera.release()
+    return None
+
+external_camera_index = find_external_camera()
+if external_camera_index is not None:
+    print(f"External camera found at index {external_camera_index}")
+    camera = cv2.VideoCapture(external_camera_index)
+else:
+    print("External camera not found. Using default camera.")
+    camera = cv2.VideoCapture(0)
+
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
 camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-try:
-    while True:
-        ret, frame = camera.read()
-        if not ret:
-            break  # Break the loop if the frame is not captured properly
+while True:
+    ret, frame = camera.read()
 
-        processed = detect_faces(frame)
-        cv2.imshow("Face Detector", processed)
+    processed = detect_faces(frame)
+    cv2.imshow("Face detector", processed)
 
-        if cv2.waitKey(1) & 0xFF == ord('c'):
-            break
-finally:
-    camera.release()
-    cv2.destroyAllWindows()
+    if cv2.waitKey(1) & 0xFF == ord('c'):
+        break
+
+camera.release()
+cv2.destroyAllWindows()

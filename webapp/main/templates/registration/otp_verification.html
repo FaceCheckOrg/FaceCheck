@@ -1,0 +1,62 @@
+{% extends "main/base.html" %}
+
+{% block title %}OTP Verification{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <body>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="otp_container">
+            <div class="otp_form">
+                <form method="POST" class="otp_post">
+                    <h1>OTP Verification</h1>
+                    {% csrf_token %}
+                    <label for="otp" class="otp_title">Enter OTP:</label>
+                    <input type="text" id="otp" class="otp_number" name="otp" required>
+                    <input type="submit" class="otp_submit" value="Verify">
+                    <p id="timer">02:00</p>
+                </form>
+                <img></img>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var timeLeft = 120; // 2 minutes in seconds
+        var timerElement = document.getElementById('timer');
+        
+        var timerInterval = setInterval(function() {
+            timeLeft--;
+            var minutes = Math.floor(timeLeft / 60);
+            var seconds = timeLeft % 60;
+            timerElement.textContent = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = '00:00';
+                displayErrorMessage("OTP has expired.");
+            }
+        }, 1000);
+
+        function displayErrorMessage(message) {
+            var messagesDiv = document.querySelector('.messages');
+            if (!messagesDiv) {
+                messagesDiv = document.createElement('div');
+                messagesDiv.className = 'messages';
+                document.body.insertBefore(messagesDiv, document.body.firstChild);
+            }
+            var errorMessage = document.createElement('div');
+            errorMessage.className = 'error'; // Use the same class as your Django error messages
+            errorMessage.textContent = message;
+            messagesDiv.appendChild(errorMessage);
+            
+        }
+    </script>
+{% endblock %}

@@ -1,11 +1,42 @@
 {% extends "main/base.html" %}
-{% block title %}Login{% endblock  %}
+
+{% block title %}Login{% endblock %}
+
 {% load crispy_forms_tags %}
 
 {% block content %}
-<form method = "post">
-    {% csrf_token %}{{form|crispy}}
-    <p href= "/sign-up">Don't have an account? Create one <a href= "/sign-up">Here</a></p>
-    <button type= "submit" class= "btn btn-success">Login</button>
-</form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Login</div>
+
+                <div class="card-body">
+                    <form id="loginForm" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <input type="checkbox" id="showPassword"> Show Password
+                        <p>Don't have an account? Create one <a href="{% url 'sign_up' %}">Here</a></p>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const showPasswordCheckbox = document.getElementById('showPassword');
+    const passwordField = document.querySelector('input[name="password"]');
+
+    showPasswordCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            passwordField.type = 'text';
+        } else {
+            passwordField.type = 'password';
+        }
+    });
+});
+</script>
 {% endblock %}

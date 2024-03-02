@@ -1,0 +1,72 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+h1 {
+    font-family: 'Helvetica', sans-serif; /* Replace with the font of your choice */
+    font-size: 2.5em; /* 2.5 times the size of the standard text */
+    color: #ffffff; /* Adjust the color as needed */
+}
+
+h2 {
+    font-family: 'Helvetica', sans-serif; /* Keep consistent or change as desired */
+    font-size: 2em;
+    color: #ffffff;
+}
+.hero-banner h1 {
+    font-family: 'Georgia', serif; /* A more decorative font for impact */
+    font-size: 3em; /* Larger size for hero banner title */
+    color: #fff; /* Assuming a dark background image */
+}
+
+.hero-banner p {
+    font-family: 'Georgia', serif;
+    font-size: 1.5em; /* Larger size for readability on a busy background */
+    color: #fff;
+}
+
+.navbar-brand {
+    width: 20%;
+    height: auto;
+}
+
+.navbar-nav {
+    width: 100%;
+    justify-content: center;
+}
+
+.navbar-nav .nav-item {
+    padding-right: 2rem;
+}
+
+.nav-item {
+    font-size: 130%;
+}
+
+.navbar {
+    position: sticky;
+    top: 0; /* Set the top edge of the navbar to stick at the top of the viewport */
+    z-index: 1000; /* Ensure it's above other content */
+    background-color: #000000; /* Assuming you have a dark navbar, specify a background color to avoid seeing the text from scrolling content */
+    /* Add the rest of your styles here */
+    padding: 1rem 2rem;
+}
+
+/* Apply the background to the whole page */
+body {
+    background-image: url('/static/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* This will give a parallax-like effect */
+    background-color: #000000;
+}
+
+.hero-banner {
+    background: none;
+    color: rgb(0, 0, 0); /* Adjust text color for readability */
+    text-shadow: 0 0 8px rgba(0,0,0,0.7); /* Optional: text shadow for better readability on a busy background */
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+}

@@ -1,10 +1,45 @@
 {% extends "main/base.html" %}
-{% block title %}Sign Up{% endblock  %}
+
+{% block title %}Sign Up{% endblock %}
+
 {% load crispy_forms_tags %}
+
 {% block content %}
-<form method = "post">
-{% csrf_token %}{{form|crispy}}
-<p href= "/sign-up">Have an account? Login <a href= "/login">Here</a></p>
-<button type= "submit" class= "btn btn-success">Register</button>
-</form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Sign Up</div>
+
+                <div class="card-body">
+                    <form id="sign_up" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <input type="checkbox" id="showPassword"> Show Password
+                        <p>Have an account? Login <a href="{% url 'login' %}">Here</a></p>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const showPasswordCheckbox = document.getElementById('showPassword');
+    const passwordField = document.querySelector('input[name="password1"]');
+    const confirmPasswordField = document.querySelector('input[name="password2"]');
+
+    showPasswordCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            passwordField.type = 'text';
+            confirmPasswordField.type = 'text';
+        } else {
+            passwordField.type = 'password';
+            confirmPasswordField.type = 'password';
+        }
+    });
+});
+</script>
 {% endblock %}

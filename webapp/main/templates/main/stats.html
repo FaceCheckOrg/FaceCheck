@@ -3,4 +3,92 @@
 
 {% block content %}
     <h1>Statistics Page</h1>
+
+    <label for="class_id_select">Select a Class ID:</label>
+    <select name="class_id_select" id="class_id_select">
+        <option value="javascript">------------</option>
+        <option value="javascript">CSC 4996 001</option>
+        <option value="javascript">CSC 4996 004</option>
+    </select>
+
+    <label for="date_select">Select a Date:</label>
+    <select name="date_select" id="date_select">
+        <option value="javascript">------------</option>
+        <option value="javascript">02/06/2024</option>
+        <option value="javascript">02/08/2024</option>
+    </select>
+
+
+    
+    <table id = "stats">
+        <thead id="thead">
+            <tr>
+                <th>Access ID</th>
+                <th>Attendance</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+
+    <script type="module">
+        import { initializeApp, } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAthInO0LFnRTXY9L2b7XUsLWO_UBXWg0c",
+          authDomain: "facecheck-93450.firebaseapp.com",
+          projectId: "facecheck-93450",
+          storageBucket: "facecheck-93450.appspot.com",
+          messagingSenderId: "691465641368",
+          appId: "1:691465641368:web:31f2d89844617d5a0b5fed",
+          measurementId: "G-FH3W7GY9NH"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const colRef = collection(db, "infoCollection")
+
+        const q = query(colRef, where ("students.CSC_4996_001.hc9082.picture", "==", "NO PHOTO"))
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach(doc=>{
+            let data = doc.data();
+            let attendance = data.students.CSC_4996_001.hc9082.attendance['02_08_2024'];
+
+            let row  = `<tr>
+                            <td>${data.students.CSC_4996_001.hc9082.picture}</td>
+                            <td>${attendance}</td>`;
+
+            let timestampCount = Object.keys(data.students.CSC_4996_001.hc9082.attendance['02_08_2024']);
+            for (let key of timestampCount) {
+                path = data.students.CSC_4996_001.hc9082.attendance['02_08_2024'][key];
+                row += '<td>' + path + '</td>';
+            }
+            row += '</tr>'
+
+            let table = document.getElementById('stats')
+            table.innerHTML += row
+        })
+/*
+        doc(db, "infoCollection", "student_doc").where("students", "==", "CSC_4996_001")
+        .get()
+        .then(querySnapshot=>{
+            querySnapshot.forEach(doc=>{
+                let data = doc.data();
+                let row  = `<tr>
+                                <td>${data.attendance}</td>
+                                <td>${data.attendance}</td>
+                            </tr>`;
+                let table = document.getElementById('stats')
+                table.innerHTML += row
+            })
+        })
+        .catch(err=>{
+            console.log(`Error: ${err}`)
+        });*/
+    </script>
 {% endblock %}

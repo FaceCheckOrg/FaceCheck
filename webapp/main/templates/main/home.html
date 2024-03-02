@@ -1,16 +1,23 @@
-{% extends 'main/base.html'%}
+{% extends 'main/base.html' %}
 {% block title %}Home Page{% endblock %}
 
+{% load static %} <!-- Load the static tag library -->
+
 {% block content %}
-    <h1>Home Page</h1>
-    <br>
-    <h2>What is FaceCheck?</h2>
-    <p>
-        Taking attendance is typically inconvenient, time-consuming, and repetitive. <br><br>
-        FaceCheck evolves the current process by allowing professors to take attendance much faster and
-        with far less human involvement. FaceCheck uses a live video feed to track which students are
-        currently present, on top of detecting when students leave and re-enter class. <br><br>
-        This website also offers various helpful statistics for professors, such as how many students exit
-        class at a given time and attendance reports for each student. 
-    </p>
+    <!-- Hero Banner -->
+    <div class="hero-banner py-5 text-center text-white">
+        <div class="container">
+            <h1 class="display-4">Welcome to FaceCheck</h1>
+            <p class="lead">Revolutionizing Classroom Attendance</p>
+            <hr class="my-4">
+            <p>Taking attendance is typically inconvenient, time-consuming, and repetitive. <br>
+                FaceCheck evolves the current process by allowing professors to take attendance much faster <br>
+                and with far less human involvement.</p>
+                {% if not user.is_authenticated %}
+                <!-- These buttons will only appear if the user is not authenticated -->
+                <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Log In</a>
+                <a class="btn btn-primary btn-lg" href="{% url 'sign_up' %}" role="button">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
