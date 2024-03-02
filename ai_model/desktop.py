@@ -6,7 +6,7 @@ import torch
 from facenet_pytorch import MTCNN, InceptionResnetV1
 import os
 import sys
-import threading  # For running the attendance process without freezing the GUI
+import threading  
 import time
 from database import combine_pt_files,download_file_combine
 from database import retrieve_encodings_from_class,retrieve_class_embedding,retrieve_encodings_from_class,update_class_encoding,download_pt_file_student
@@ -63,9 +63,6 @@ def time_validation(class_info):
 
 
 
-
-
-# GUI function to handle start attendance
 def attempt_start_attendance():
     class_section = class_section_entry.get().upper()
     exists, class_data = class_section_validation(class_section)
@@ -73,28 +70,17 @@ def attempt_start_attendance():
     if not exists:
         messagebox.showerror("Error", "Class section does not exist. Please enter a valid one.")
         return
-    
-    # Assuming time_validation is not needed for this fix, but you can uncomment and adjust as necessary.
-    # if not time_validation(class_data):
-    #     messagebox.showerror("Error", "It is not the time for this class. Please check the schedule.")
-    #     return
-
-    # Proceed if class encoding exists, otherwise combine files and start attendance
     if retrieve_class_embedding(class_section) != "NO ENCODING":
         download_file_combine(retrieve_class_embedding(class_section), f'{class_section}.pt')
     else:
         combine_pt_files(class_section)
 
-    # Start the attendance process
     threading.Thread(target=start_attendance, args=(class_section,)).start()
-# Function to start attendance process
-# Function to start attendance process, adjusted to work with combined data.
 def start_attendance(class_section):
     def attendance_process():
         device = setup_device()
         mtcnn, resnet = load_models(device)
         
-        # Assuming `prepare_data` is adjusted to load the combined .pt file correctly.
         embedding_list, name_list = torch.load('hi4718.pt', map_location=device)
         print(embedding_list)
         print(name_list)
@@ -116,7 +102,7 @@ def start_attendance(class_section):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-            time.sleep(10)  # Wait for 10 seconds before capturing the next frame
+            time.sleep(10) 
 
         cam.release()
         cv2.destroyAllWindows()
